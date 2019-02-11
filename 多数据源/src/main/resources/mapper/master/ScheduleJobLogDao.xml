@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rtc.mapper.master.ScheduleJobLogDao">
+
+	<resultMap id="BaseScheduleJobLogMap" type="com.rtc.entity.ScheduleJobLogEntity" >
+	    <id column="log_id" property="logId" jdbcType="BIGINT" />
+	    <result column="job_id" property="jobId" jdbcType="VARCHAR" />
+	    <result column="bean_name" property="beanName" jdbcType="VARCHAR" />
+	    <result column="method_name" property="methodName" jdbcType="VARCHAR" />
+	    <result column="params" property="params" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="INTEGER" />
+	    <result column="error" property="error" jdbcType="VARCHAR" />
+	    <result column="times" property="times" jdbcType="INTEGER" />
+	    <result column="create_time" property="createTime" jdbcType="DATE" />
+	</resultMap>
+
+	<select id="queryObject" resultMap="BaseScheduleJobLogMap" >
+		select * from schedule_job_log where log_id = #{value}
+	</select> 
+
+	<select id="queryList" resultMap="BaseScheduleJobLogMap" >
+		select * from schedule_job_log 
+		<where>
+			<if test="jobId != null">
+				and job_id = #{jobId}
+			</if>
+		</where>
+		order by log_id desc 
+		<if test="offset != null and limit != null ">
+		limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(1) from schedule_job_log 
+		<where>
+			<if test="jobId != null">
+				and job_id = #{jobId}
+			</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.rtc.entity.ScheduleJobLogEntity">
+		insert into schedule_job_log
+		(
+			`job_id`, 
+			`bean_name`, 
+			`method_name`, 
+			`params`, 
+			`status`, 
+			`error`, 
+			`times`, 
+			`create_time`
+		)
+		values
+		(
+			#{jobId}, 
+			#{beanName}, 
+			#{methodName}, 
+			#{params}, 
+			#{status}, 
+			#{error}, 
+			#{times}, 
+			#{createTime}
+		)
+	</insert>
+	
+</mapper>
